@@ -1,6 +1,6 @@
 // ── Lógica de Login AcquaSafe ──────────────────────────────────────────
 
-// Credenciais de teste (Substitua por uma API real futuramente)
+// Credenciais de teste
 const USUARIOS_TESTE = [
     { login: 'usuario@email.com', senha: '123', nome: 'Usuário Comum' },
     { login: '12345678900', senha: '123', nome: 'Ana Paula' }
@@ -9,31 +9,34 @@ const USUARIOS_TESTE = [
 function handleLogin(event) {
     event.preventDefault();
     
-    const login = document.getElementById('login-usuario').value.trim();
-    const senha = document.getElementById('login-senha').value;
-    const btnText = document.getElementById('btn-text');
+    const loginInput = document.getElementById('login-usuario');
+    const senhaInput = document.getElementById('login-senha');
+    const btnText    = document.getElementById('btn-text');
     
-    // Feedback visual de carregamento
+    const login = loginInput.value.trim();
+    const senha = senhaInput.value;
+    
+    // Feedback visual
     const originalText = btnText.textContent;
     btnText.textContent = 'Verificando...';
     
     setTimeout(() => {
-        // Verifica se é um usuário comum
+        // Validação estrita: só entra se o login E a senha coincidirem com a lista
         const usuario = USUARIOS_TESTE.find(u => u.login === login && u.senha === senha);
         
         if (usuario) {
-            // Login de usuário comum bem-sucedido
+            // Login de usuário comum
             sessionStorage.setItem('usuarioLogado', 'true');
             sessionStorage.setItem('nomeUsuario', usuario.nome);
-            window.location.href = 'dashboard.html'; // Redireciona para o painel do usuário
+            window.location.href = 'dashboard.html'; 
         } else {
-            // Se não for usuário comum, verifica se é admin (opcional se quiser login unificado)
-            // Mas o ideal é que o admin use a página login-admin.html
-            
+            // Erro de login
             alert('Usuário ou senha incorretos.');
             btnText.textContent = originalText;
+            senhaInput.value = '';
+            senhaInput.focus();
         }
-    }, 800);
+    }, 600);
 }
 
 // Inicializa ícones Lucide
