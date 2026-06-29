@@ -122,33 +122,34 @@
     </div>
 </div>
 
-<script src="login.js"></script>
 <script>
-    lucide.createIcons();
-
     // ── Autenticação admin ──────────────────────────────────────────────
-    // Credenciais padrão (altere conforme necessário ou integre ao seu backend)
     const ADMIN_USER = 'admin';
     const ADMIN_PASS = 'admin123';
 
     function loginAdmin() {
-        const usuario = document.getElementById('usuario').value.trim();
-        const senha   = document.getElementById('senha').value;
-        const errEl   = document.getElementById('login-error');
+        const usuarioInput = document.getElementById('usuario');
+        const senhaInput   = document.getElementById('senha');
+        const errEl        = document.getElementById('login-error');
+
+        const usuario = usuarioInput.value.trim();
+        const senha   = senhaInput.value;
+
+        console.log("Tentativa de login:", usuario);
 
         if (usuario === ADMIN_USER && senha === ADMIN_PASS) {
-            // Salva sessão no sessionStorage
             sessionStorage.setItem('adminLogado', 'true');
             sessionStorage.setItem('adminUsuario', usuario);
             errEl.classList.add('hidden');
             showToast('Login realizado com sucesso! Redirecionando…', 'success');
-            setTimeout(() => window.location.href = 'admin-clientes.html', 1200);
+            setTimeout(() => window.location.href = 'admin-clientes.html', 1000);
         } else {
             errEl.classList.remove('hidden');
+            senhaInput.value = '';
+            senhaInput.focus();
         }
     }
 
-    // ── Navegação protegida ─────────────────────────────────────────────
     function navAdmin(pagina, nome) {
         const logado = sessionStorage.getItem('adminLogado') === 'true';
         if (!logado) {
@@ -158,7 +159,6 @@
         }
     }
 
-    // ── Toast helper ────────────────────────────────────────────────────
     let toastTimer = null;
     function showToast(msg, tipo) {
         const toast  = document.getElementById('toast');
@@ -179,6 +179,11 @@
         if (toastTimer) clearTimeout(toastTimer);
         toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
     }
+
+    // Inicializa ícones
+    window.addEventListener('DOMContentLoaded', () => {
+        if (window.lucide) lucide.createIcons();
+    });
 </script>
 </body>
 </html>
